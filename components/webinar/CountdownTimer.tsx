@@ -5,6 +5,7 @@
  * 20-40% conversion increase - Creates urgency/scarcity
  * 
  * Pattern: Urgency × Scarcity × Deadline Pressure × ONE
+ * Guardians: AEYON (999 Hz) × Lux (530 Hz)
  */
 
 import { useState, useEffect } from 'react'
