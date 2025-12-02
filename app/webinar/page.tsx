@@ -10,14 +10,56 @@
  * All content inline. Zero component dependencies. Maximum conversion.
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { AGENDA_ITEMS, LEAD_MAGNETS, FAQ_ITEMS, FORM_REASSURANCE } from './content'
+
+// Webinar date/time: Thursday, December 4, 2025 at 2:00 PM EST (7:00 PM UTC)
+const WEBINAR_DATE = new Date('2025-12-04T19:00:00Z') // UTC time
 
 export default function WebinarLandingPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({ firstName: '', email: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: false })
+  const [showScrollTop, setShowScrollTop] = useState(false)
+
+  // Scroll to top handler
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Show scroll-to-top button when scrolled down
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date()
+      const diff = WEBINAR_DATE.getTime() - now.getTime()
+      
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true })
+        return
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+
+      setTimeLeft({ days, hours, minutes, seconds, isPast: false })
+    }
+
+    updateCountdown()
+    const interval = setInterval(updateCountdown, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -85,6 +127,44 @@ export default function WebinarLandingPage() {
             <p className="text-lg mb-8 text-white/90 max-w-3xl mx-auto">
               Free 60-minute technical session. <strong>Toolkit delivered instantly upon registration.</strong> MIT-licensed, open source. Learn how validation can respect your judgment while catching real issues.
             </p>
+            
+            {/* Countdown Timer */}
+            {!timeLeft.isPast && (
+              <div className="max-w-2xl mx-auto mb-8">
+                <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6">
+                  <div className="text-center mb-4">
+                    <p className="text-white/90 text-sm mb-2">Webinar starts in:</p>
+                    <div className="flex items-center justify-center gap-4 md:gap-6">
+                      <div className="flex flex-col items-center">
+                        <div className="text-3xl md:text-4xl font-bold text-white">{timeLeft.days}</div>
+                        <div className="text-xs text-white/80 uppercase">Days</div>
+                      </div>
+                      <div className="text-2xl text-white/60">:</div>
+                      <div className="flex flex-col items-center">
+                        <div className="text-3xl md:text-4xl font-bold text-white">{String(timeLeft.hours).padStart(2, '0')}</div>
+                        <div className="text-xs text-white/80 uppercase">Hours</div>
+                      </div>
+                      <div className="text-2xl text-white/60">:</div>
+                      <div className="flex flex-col items-center">
+                        <div className="text-3xl md:text-4xl font-bold text-white">{String(timeLeft.minutes).padStart(2, '0')}</div>
+                        <div className="text-xs text-white/80 uppercase">Minutes</div>
+                      </div>
+                      <div className="text-2xl text-white/60">:</div>
+                      <div className="flex flex-col items-center">
+                        <div className="text-3xl md:text-4xl font-bold text-white">{String(timeLeft.seconds).padStart(2, '0')}</div>
+                        <div className="text-xs text-white/80 uppercase">Seconds</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-center pt-4 border-t border-white/20">
+                    <p className="text-white/90 text-xs">
+                      <strong className="text-white">Thursday, December 4, 2025</strong><br />
+                      11:00 AM PST / 2:00 PM EST
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Why Free Transparency */}
@@ -505,6 +585,19 @@ export default function WebinarLandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-[#486581] to-[#334e68] text-white p-4 rounded-full shadow-2xl hover:shadow-[#486581]/50 transform hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50"
+          aria-label="Scroll to top"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
+        </button>
+      )}
     </div>
   )
 }
