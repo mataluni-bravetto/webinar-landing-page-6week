@@ -110,6 +110,9 @@ export async function POST(request: NextRequest) {
     // await kv.incr('webinar:registrations:count')
 
     // Send confirmation email with immediate deliverables if SendGrid is configured
+    let emailSent = false
+    let emailError: string | null = null
+    
     if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
       try {
         const urls = getUrls()
@@ -125,18 +128,33 @@ export async function POST(request: NextRequest) {
           html,
           text
         })
-      } catch (emailError) {
-        console.error('Error sending email:', emailError)
+        emailSent = true
+      } catch (error: any) {
+        emailError = error?.response?.body?.errors?.[0]?.message || error?.message || 'Unknown error'
+        console.error('SendGrid Error:', {
+          message: error?.message,
+          response: error?.response?.body,
+          code: error?.code,
+          statusCode: error?.response?.statusCode
+        })
         // Don't fail the registration if email fails
       }
+    } else {
+      emailError = 'SendGrid not configured (missing SENDGRID_API_KEY or SENDGRID_FROM_EMAIL)'
+      console.warn('SendGrid not configured:', {
+        hasApiKey: !!process.env.SENDGRID_API_KEY,
+        hasFromEmail: !!process.env.SENDGRID_FROM_EMAIL
+      })
     }
 
-    // Return success response
+    // Return success response with email status
     return NextResponse.json(
       {
         success: true,
         message: 'Registration successful',
         registrationId: registrationId,
+        emailSent,
+        emailError: emailError || undefined,
         data: {
           firstName,
           email,

@@ -38,6 +38,13 @@ export default function WebinarLandingPage() {
         if (data.registrationId) {
           sessionStorage.setItem('webinar_registration_id', data.registrationId)
         }
+        
+        // Log email status for debugging (YAGNI: simple console log)
+        if (data.emailSent === false) {
+          console.warn('Email not sent:', data.emailError || 'SendGrid not configured')
+          // Still proceed - registration succeeded
+        }
+        
         router.push('/webinar/thank-you')
       } else {
         const error = await response.json()
