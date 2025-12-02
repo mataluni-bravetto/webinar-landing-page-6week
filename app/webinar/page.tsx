@@ -136,16 +136,16 @@ export default function WebinarLandingPage() {
                 </button>
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/80">
                   <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">CAL</span> Calendar invite included
+                    <span className="text-xs font-semibold">◉</span> Calendar invite included
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="text-xs font-semibold">✓</span> No credit card required
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">LOCK</span> No sales calls
+                    <span className="text-xs font-semibold">◉</span> No sales calls
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">MAIL</span> Unsubscribe anytime
+                    <span className="text-xs font-semibold">@</span> Unsubscribe anytime
                   </span>
                 </div>
               </form>
@@ -175,25 +175,25 @@ export default function WebinarLandingPage() {
             {[
               { 
                 time: '0:00-10:00', 
-                label: 'ANALYSIS', 
+                symbol: '●', 
                 title: 'AI Code Failure Analysis', 
                 desc: 'What percentage of AI-generated code actually works? We tested 1,200+ functions across Claude, GPT-4, and Copilot. Results: 40-60% contain phantom features, 27.25% have security vulnerabilities, 15% fail silently with edge cases. You\'ll see specific examples of each failure type.' 
               },
               { 
                 time: '10:00-30:00', 
-                label: 'PIPELINE', 
+                symbol: '→', 
                 title: '3-Step Validation Pipeline', 
                 desc: 'Static Analysis: AST parsing for hallucinated imports, dependency verification, type inference. Runtime Verification: Automated test generation, property-based testing, mutation testing. Security Scanning: OWASP Top 10 detection, dependency vulnerability checking, secret detection. Each step includes live demos.' 
               },
               { 
                 time: '30:00-50:00', 
-                label: 'CI/CD', 
+                symbol: '>', 
                 title: 'CI/CD Integration', 
                 desc: 'How to add validation to your existing pipeline: GitHub Actions workflow (copy-paste ready), pre-commit hooks for local validation, PR check integration, Slack/Discord notifications. Plus: How to handle false positives without slowing down.' 
               },
               { 
                 time: '50:00-60:00', 
-                label: 'Q&A', 
+                symbol: '?', 
                 title: 'Live Q&A + Edge Cases', 
                 desc: 'Bring your worst AI-generated code. We\'ll validate it live and discuss framework-specific quirks, when validation adds friction vs. value, the 2.2% of failures we still miss (and why), and roadmap for improvement.' 
               }
@@ -201,7 +201,7 @@ export default function WebinarLandingPage() {
               <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#9fb3c8] transition-all duration-300 hover:-translate-y-2">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <span className="text-xs font-bold text-white tracking-wider">{feature.label}</span>
+                    <span className="text-2xl font-bold text-white">{feature.symbol}</span>
                   </div>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[#486581] mb-2">{feature.time}</div>
@@ -248,15 +248,15 @@ export default function WebinarLandingPage() {
               </p>
               <div className="flex flex-wrap items-center justify-center gap-6 text-[#334e68]">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-[#486581] px-2 py-1 bg-[#f0f4f8] rounded">MIT</span>
+                  <span className="text-lg font-bold text-[#486581]">✓</span>
                   <span className="text-sm font-medium">MIT Licensed</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-[#486581] px-2 py-1 bg-[#f0f4f8] rounded">OPEN</span>
+                  <span className="text-lg font-bold text-[#486581]">→</span>
                   <span className="text-sm font-medium">Fully Transparent</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-[#486581] px-2 py-1 bg-[#f0f4f8] rounded">PROD</span>
+                  <span className="text-lg font-bold text-[#486581]">●</span>
                   <span className="text-sm font-medium">Production Tested</span>
                 </div>
               </div>
@@ -318,16 +318,16 @@ export default function WebinarLandingPage() {
 
           <div className="space-y-6">
             {[
-              { label: 'TS', title: '12 TypeScript Validation Functions', desc: 'Copy-paste ready implementations. Fully commented and tested. Includes phantom API detection, security scanning, and type inference.' },
-              { label: 'CI/CD', title: 'GitHub Actions Workflow', desc: 'Ready-to-use CI/CD integration. Pre-commit hooks included. Works with React, Vue, Next.js, FastAPI, Express.' },
-              { label: 'REPORT', title: 'Accuracy Report', desc: 'Test results across 847 AI-generated functions. Shows what we caught, what we missed, and why. Includes edge case documentation.' },
-              { label: 'GUIDE', title: '47-Page Methodology Guide', desc: 'Complete technical documentation explaining how each validation step works, why it matters, and how to extend it.' },
-              { label: 'CHECK', title: '15-Step Integration Checklist', desc: 'Actionable checklist for adding validation to your existing stack. Includes troubleshooting guide.' }
+              { symbol: '→', title: '12 TypeScript Validation Functions', desc: 'Copy-paste ready implementations. Fully commented and tested. Includes phantom API detection, security scanning, and type inference.' },
+              { symbol: '>', title: 'GitHub Actions Workflow', desc: 'Ready-to-use CI/CD integration. Pre-commit hooks included. Works with React, Vue, Next.js, FastAPI, Express.' },
+              { symbol: '●', title: 'Accuracy Report', desc: 'Test results across 847 AI-generated functions. Shows what we caught, what we missed, and why. Includes edge case documentation.' },
+              { symbol: '→', title: '47-Page Methodology Guide', desc: 'Complete technical documentation explaining how each validation step works, why it matters, and how to extend it.' },
+              { symbol: '✓', title: '15-Step Integration Checklist', desc: 'Actionable checklist for adding validation to your existing stack. Includes troubleshooting guide.' }
             ].map((magnet, idx) => (
               <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#9fb3c8] transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-start gap-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <span className="text-xs font-bold text-white tracking-wider">{magnet.label}</span>
+                    <span className="text-2xl font-bold text-white">{magnet.symbol}</span>
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold mb-2 text-[#102a43]">
