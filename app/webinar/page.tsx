@@ -12,7 +12,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AGENDA_ITEMS, LEAD_MAGNETS, FAQ_ITEMS, FORM_REASSURANCE } from './content.js'
+import { AGENDA_ITEMS, LEAD_MAGNETS, FAQ_ITEMS, FORM_REASSURANCE } from './content'
 
 export default function WebinarLandingPage() {
   const router = useRouter()
