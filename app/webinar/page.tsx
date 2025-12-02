@@ -28,8 +28,8 @@ export default function WebinarLandingPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: formData.email,
-          name: formData.firstName
+          firstName: formData.firstName,
+          email: formData.email
         })
       })
 
