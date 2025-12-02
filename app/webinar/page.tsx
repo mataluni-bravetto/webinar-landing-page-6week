@@ -414,11 +414,11 @@ export default function WebinarLandingPage() {
 
           <div className="space-y-6">
             {[
-              { symbol: '→', title: '12 TypeScript Validation Functions', desc: 'Copy-paste ready implementations. Fully commented and tested. Includes phantom API detection, security scanning, and type inference.' },
-              { symbol: '>', title: 'GitHub Actions Workflow', desc: 'Ready-to-use CI/CD integration. Pre-commit hooks included. Works with React, Vue, Next.js, FastAPI, Express.' },
-              { symbol: '●', title: 'Accuracy Report', desc: 'Test results across 847 AI-generated functions. Shows what we caught, what we missed, and why. Includes edge case documentation.' },
-              { symbol: '→', title: '47-Page Methodology Guide', desc: 'Complete technical documentation explaining how each validation step works, why it matters, and how to extend it.' },
-              { symbol: '✓', title: '15-Step Integration Checklist', desc: 'Actionable checklist for adding validation to your existing stack. Includes troubleshooting guide.' }
+              { symbol: '→', title: '12 TypeScript Validation Functions', desc: 'Copy-paste ready implementations. Fully commented and tested. Includes phantom API detection, security scanning, and type inference. Delivered instantly upon registration.' },
+              { symbol: '>', title: 'GitHub Actions Workflow', desc: 'Ready-to-use CI/CD integration. Pre-commit hooks included. Works with React, Vue, Next.js, FastAPI, Express. Access immediately after opt-in.' },
+              { symbol: '●', title: 'Accuracy Report', desc: 'Test results across 847 AI-generated functions. Shows what we caught, what we missed, and why. Includes edge case documentation. Available right now.' },
+              { symbol: '→', title: '47-Page Methodology Guide', desc: 'Complete technical documentation explaining how each validation step works, why it matters, and how to extend it. Instant access via email.' },
+              { symbol: '✓', title: '15-Step Integration Checklist', desc: 'Actionable checklist for adding validation to your existing stack. Includes troubleshooting guide. Included in instant delivery.' }
             ].map((magnet, idx) => (
               <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#9fb3c8] transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-start gap-6">
