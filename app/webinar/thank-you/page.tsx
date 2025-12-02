@@ -34,12 +34,9 @@ export default function WebinarThankYouPage() {
           </div>
           
           {/* Heading */}
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <h1 className="text-4xl font-bold text-[#102a43]">
-              You're All Set!
-            </h1>
-            <span className="text-4xl">✨</span>
-          </div>
+          <h1 className="text-4xl font-bold text-[#102a43] mb-4">
+            You're All Set!
+          </h1>
           
           {/* Message */}
           <p className="text-xl text-[#334e68] mb-8">
@@ -49,30 +46,30 @@ export default function WebinarThankYouPage() {
           {/* Check Email */}
           <div className="bg-gradient-to-br from-[#f0f4f8] to-[#e0e8f0]/50 border-2 border-[#bcccdc] rounded-2xl p-6 mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <span className="text-2xl">📧</span>
+              <span className="text-2xl font-bold text-[#486581]">→</span>
               <h2 className="text-2xl font-bold text-[#102a43]">
                 Check Your Email
               </h2>
             </div>
             <p className="text-[#334e68] mb-4">
-              We've sent you a confirmation email with all the details, including:
+              We've sent you instant access to everything, including:
             </p>
             <ul className="text-left space-y-3 text-[#334e68]">
               <li className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <span>Webinar date, time, and join link</span>
+                <span><strong>Validation Toolkit</strong> — GitHub repo link (instant access)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <span>Calendar invite (add to your calendar)</span>
+                <span><strong>Methodology Report</strong> — Complete 47-page guide (instant access)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <span>Reminder schedule (24h, 3h, 15min before)</span>
+                <span><strong>Webinar details</strong> — Date, time, and join link</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <span>Your free bonus resources ($597 value)</span>
+                <span><strong>Calendar invite</strong> — Sent 24 hours before event</span>
               </li>
             </ul>
           </div>
@@ -95,50 +92,56 @@ export default function WebinarThankYouPage() {
             
             <div className="bg-white border-2 border-[#bcccdc] rounded-xl p-6 text-left hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4">
-                <span className="text-[#486581] text-3xl">📅</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl font-bold text-white">◉</span>
+                </div>
                 <div>
                   <h4 className="text-lg font-bold text-[#102a43] mb-2">
-                    Add to Your Calendar
+                    Access Your Toolkit Now
                   </h4>
                   <p className="text-[#334e68] text-sm mb-2">
-                    Don't miss it! Add the webinar to your calendar so you get reminders.
+                    Your validation toolkit and methodology report are ready right now. Check your email for instant access links.
                   </p>
                   <p className="text-sm text-gray-500">
-                    (Check your email for the calendar link)
+                    (GitHub repo + 47-page methodology guide included)
                   </p>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white border-2 border-yellow-200 rounded-xl p-6 text-left hover:shadow-lg transition-shadow">
+            <div className="bg-white border-2 border-[#bcccdc] rounded-xl p-6 text-left hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4">
-                <span className="text-yellow-500 text-3xl">🎁</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl font-bold text-white">→</span>
+                </div>
                 <div>
                   <h4 className="text-lg font-bold text-[#102a43] mb-2">
-                    Get Your Free Bonuses
+                    Calendar Invite Coming
                   </h4>
                   <p className="text-[#334e68] text-sm mb-2">
-                    All bonus resources will be sent to your email after the webinar.
+                    We'll send you the webinar link and calendar invite 24 hours before the event.
                   </p>
                   <p className="text-sm text-gray-500">
-                    (Code examples, templates, benchmarks, and more!)
+                    (Thursday, December 4, 2025 at 2:00 PM EST)
                   </p>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white border-2 border-green-200 rounded-xl p-6 text-left hover:shadow-lg transition-shadow">
+            <div className="bg-white border-2 border-[#bcccdc] rounded-xl p-6 text-left hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4">
-                <span className="text-green-500 text-3xl">📧</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-xl font-bold text-white">●</span>
+                </div>
                 <div>
                   <h4 className="text-lg font-bold text-[#102a43] mb-2">
                     Watch for Reminders
                   </h4>
                   <p className="text-[#334e68] text-sm mb-2">
-                    We'll send you reminder emails 24 hours, 3 hours, and 15 minutes before the webinar.
+                    We'll send reminder emails 24 hours, 3 hours, and 15 minutes before the webinar.
                   </p>
                   <p className="text-sm text-gray-500">
-                    (Make sure to check your spam folder if you don't see them)
+                    (Check spam folder if you don't see them)
                   </p>
                 </div>
               </div>

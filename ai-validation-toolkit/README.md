@@ -13,7 +13,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/ai-validation-toolkit
+git clone https://github.com/bravetto/ai-validation-toolkit
 cd ai-validation-toolkit
 
 # Install dependencies

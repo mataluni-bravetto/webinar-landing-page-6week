@@ -325,6 +325,16 @@ export default function WebinarLandingPage() {
               <p className="text-[#334e68] leading-relaxed mb-6">
                 You can audit every check, see the test corpus, and verify our accuracy claims yourself. We're not asking for trust—we're showing our work.
               </p>
+              <div className="mb-6">
+                <a 
+                  href="https://github.com/bravetto/ai-validation-toolkit" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-block bg-gradient-to-r from-[#486581] to-[#334e68] hover:from-[#334e68] hover:to-[#486581] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  View Repository on GitHub →
+                </a>
+              </div>
               <div className="flex flex-wrap items-center justify-center gap-6 text-[#334e68]">
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-[#486581]">✓</span>
@@ -469,39 +479,30 @@ export default function WebinarLandingPage() {
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white drop-shadow-2xl" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-            Don't Miss This Free Masterclass
+            Ready to Get Started?
           </h2>
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
             <div className="w-2 h-2 bg-white rounded-full"></div>
             <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
           </div>
-          <p className="text-xl mb-10 text-white/95 leading-relaxed max-w-2xl mx-auto" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>
-            Get the validation toolkit and join the 60-minute technical deep-dive. Free, open source, and ready to use today.
+          <p className="text-xl mb-8 text-white/95 leading-relaxed max-w-2xl mx-auto" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>
+            Register above to get instant access to the validation toolkit. Join the 60-minute technical deep-dive. Free, open source, MIT licensed.
           </p>
-          <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="email"
-                placeholder="your@email.com"
-                required
-                autoCapitalize="off"
-                autoCorrect="off"
-                autoComplete="email"
-                inputMode="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/70 focus:outline-none focus:border-white"
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-gradient-to-r from-[#486581] to-[#334e68] text-white hover:shadow-xl transform hover:scale-105 transition-all min-h-[48px] px-6 py-3 rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? 'Registering...' : 'Reserve My Spot - Free'}
-              </button>
-            </div>
-          </form>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-white/80">
+            <span className="flex items-center gap-2">
+              <span className="text-xs font-semibold">→</span> Instant toolkit access
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="text-xs font-semibold">✓</span> No credit card required
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="text-xs font-semibold">◉</span> Calendar invite (24h before)
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="text-xs font-semibold">@</span> Unsubscribe anytime
+            </span>
+          </div>
         </div>
       </section>
     </div>
