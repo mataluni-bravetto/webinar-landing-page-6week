@@ -75,7 +75,7 @@ export default function WebinarLandingPage() {
               See the exact validation framework we use internally—a context-aware system that works WITH you, not against you. Includes the failure patterns we've documented, the scripts we run, and how to handle the edge cases that still break things.
             </p>
             <p className="text-lg mb-8 text-white/90 max-w-3xl mx-auto">
-              Free 60-minute technical session. MIT-licensed toolkit included. Learn how validation can respect your judgment while catching real issues.
+              Free 60-minute technical session. <strong>Toolkit delivered instantly upon registration.</strong> MIT-licensed, open source. Learn how validation can respect your judgment while catching real issues.
             </p>
           </div>
 
@@ -132,17 +132,17 @@ export default function WebinarLandingPage() {
                   disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-[#486581] via-[#627d98] to-[#486581] hover:from-[#627d98] hover:via-[#486581] hover:to-[#334e68] text-white shadow-2xl hover:shadow-[#486581]/50 transform hover:scale-[1.02] transition-all duration-300 font-bold text-lg py-6 rounded-xl border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Registering...' : "Get the Validation Toolkit →"}
+                  {isSubmitting ? 'Registering...' : "Get Instant Access →"}
                 </button>
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/80">
                   <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">◉</span> Calendar invite included
+                    <span className="text-xs font-semibold">→</span> Instant toolkit access
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="text-xs font-semibold">✓</span> No credit card required
                   </span>
                   <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">◉</span> No sales calls
+                    <span className="text-xs font-semibold">◉</span> Calendar invite (24h before)
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="text-xs font-semibold">@</span> Unsubscribe anytime
