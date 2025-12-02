@@ -18,6 +18,7 @@ function getUrls() {
 }
 
 function createEmailTemplate(firstName: string, urls: ReturnType<typeof getUrls>) {
+  const teamName = process.env.SENDGRID_FROM_NAME || 'Bravetto Team'
   return {
     subject: 'Your Validation Toolkit is Ready (Instant Access)',
     html: `
@@ -60,7 +61,7 @@ function createEmailTemplate(firstName: string, urls: ReturnType<typeof getUrls>
     <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #d9e2ec; color: #627d98; font-size: 14px;">
       <strong>Why immediate access?</strong> We want you to experience the validation system before the webinar. Use it, test it, come prepared with questions. Zero risk, maximum value.
     </p>
-    <p style="margin-top: 25px; color: #334e68;">Best regards,<br><strong style="color: #102a43;">${process.env.SENDGRID_FROM_NAME || 'Bravetto Team'}</strong></p>
+    <p style="margin-top: 25px; color: #334e68;">Best regards,<br><strong style="color: #102a43;">${teamName}</strong></p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #9fb3c8; font-size: 12px;">
     <p>You're receiving this because you registered for the AI Code Validation Webinar.</p>
