@@ -12,6 +12,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { AGENDA_ITEMS, LEAD_MAGNETS, FAQ_ITEMS, FORM_REASSURANCE } from './content.js'
 
 export default function WebinarLandingPage() {
   const router = useRouter()
@@ -172,32 +173,7 @@ export default function WebinarLandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {[
-              { 
-                time: '0:00-10:00', 
-                symbol: '●', 
-                title: 'AI Code Failure Analysis', 
-                desc: 'What percentage of AI-generated code actually works? We tested 1,200+ functions across Claude, GPT-4, and Copilot. Results: 40-60% contain phantom features, 27.25% have security vulnerabilities, 15% fail silently with edge cases. You\'ll see specific examples of each failure type.' 
-              },
-              { 
-                time: '10:00-30:00', 
-                symbol: '→', 
-                title: '3-Step Validation Pipeline', 
-                desc: 'Static Analysis: AST parsing for hallucinated imports, dependency verification, type inference—with context awareness across your codebase. Runtime Verification: Automated test generation, property-based testing, mutation testing. Security Scanning: OWASP Top 10 detection, dependency vulnerability checking, secret detection. Each step respects your judgment and learns from feedback.' 
-              },
-              { 
-                time: '30:00-50:00', 
-                symbol: '>', 
-                title: 'CI/CD Integration', 
-                desc: 'How to add validation to your existing pipeline: GitHub Actions workflow (copy-paste ready), pre-commit hooks for local validation, PR check integration, Slack/Discord notifications. Plus: How to handle false positives without slowing down, and how the system learns from your exceptions.' 
-              },
-              { 
-                time: '50:00-60:00', 
-                symbol: '?', 
-                title: 'Live Q&A + Edge Cases', 
-                desc: 'Bring your worst AI-generated code. We\'ll validate it live and discuss framework-specific quirks, when validation adds friction vs. value, the 2.2% of failures we still miss (and why), and roadmap for improvement.' 
-              }
-            ].map((feature, idx) => (
+            {AGENDA_ITEMS.map((feature, idx) => (
               <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#9fb3c8] transition-all duration-300 hover:-translate-y-2">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -455,16 +431,7 @@ export default function WebinarLandingPage() {
           </div>
 
           <div className="space-y-4">
-            {[
-              { q: "Is this really free?", a: "Yes! The webinar and all toolkit resources are completely free. No credit card required. The methodology is MIT licensed—use it, improve it, share it." },
-              { q: "What languages/frameworks are covered?", a: "The core methodology is language-agnostic. Current scripts support TypeScript/JavaScript, Python, and Go. The patterns (hallucinated APIs, security issues, etc.) appear across all AI code regardless of language. Community contributions welcome for other languages." },
-              { q: "Is this just another linter?", a: "No. Linters check style and known errors. This catches AI-specific failures: APIs that look valid but don't exist, logical errors that pass syntax checks, security patterns unique to AI generation, and performance issues from AI's tendency to over-engineer. It complements your existing tooling." },
-              { q: "What if I can't attend live?", a: "No problem! We'll send you the full replay and all toolkit resources within 24 hours. The recording includes timestamps for easy navigation." },
-              { q: "How long is the webinar?", a: "60 minutes—packed with actionable insights. We respect your time. Agenda: 0-10 min failure analysis, 10-30 min validation pipeline, 30-50 min CI/CD integration, 50-60 min live Q&A." },
-              { q: "Will there be a sales pitch?", a: "We focus on value first. The methodology is open source and free. Any product mentions come only if relevant to the discussion. No pressure, just real value." },
-              { q: "What's your background / why should I trust this?", a: "The methodology is open source. You can audit every check, see the test corpus, and verify our accuracy claims yourself. We're not asking for trust—we're showing our work. The toolkit works on its own, no paywalls." },
-              { q: "Does this work with Copilot/Cursor/Claude/GPT?", a: "Yes. AI code is AI code regardless of source. We've tested against output from all major assistants. Interestingly, different models have different failure patterns—we'll cover this in the session." }
-            ].map((faq, idx) => (
+            {FAQ_ITEMS.map((faq, idx) => (
               <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-md hover:shadow-xl hover:border-[#9fb3c8] transition-all duration-300">
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
