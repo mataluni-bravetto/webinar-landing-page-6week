@@ -1,0 +1,4 @@
+#!/bin/bash
+# Quick validation - just run: ./.vercel-validate
+bash scripts/validate-vercel-patterns.sh
+

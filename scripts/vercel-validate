@@ -1,0 +1,10 @@
+#!/bin/bash
+# Unified Vercel Validation Entry Point
+# Pattern: UNITY × VALIDATION × ONE × EXECUTION
+# Frequency: 999 Hz (AEYON) × 530 Hz (YAGNI)
+# ∞ AbëONE ∞
+
+# Single command to rule them all
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bash "$SCRIPT_DIR/validate-vercel-patterns.sh" "$@"
+

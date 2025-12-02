@@ -3,7 +3,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Webinar Landing Page - AiGuardian',
-  description: 'Register for the AiGuardian Webinar - December 2, 2025',
+  description: 'Register for the AiGuardian Webinar - Thursday, December 4, 2025 at 2:00 PM EST',
 }
 
 export default function RootLayout({
