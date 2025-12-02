@@ -11,7 +11,7 @@ function getBaseUrl(): string {
 function getUrls() {
   const baseUrl = getBaseUrl()
   return {
-    githubRepo: process.env.GITHUB_REPO_URL || 'https://github.com/your-org/ai-validation-toolkit',
+    githubRepo: process.env.GITHUB_REPO_URL || 'https://github.com/bravetto/ai-validation-toolkit',
     methodologyReport: `${baseUrl}/VALIDATION_METHODOLOGY_REPORT.md`,
     landingPage: `${baseUrl}/webinar`
   }
@@ -60,7 +60,7 @@ function createEmailTemplate(firstName: string, urls: ReturnType<typeof getUrls>
     <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #d9e2ec; color: #627d98; font-size: 14px;">
       <strong>Why immediate access?</strong> We want you to experience the validation system before the webinar. Use it, test it, come prepared with questions. Zero risk, maximum value.
     </p>
-    <p style="margin-top: 25px; color: #334e68;">Best regards,<br><strong style="color: #102a43;">The AI Validation Team</strong></p>
+    <p style="margin-top: 25px; color: #334e68;">Best regards,<br><strong style="color: #102a43;">${process.env.SENDGRID_FROM_NAME || 'Bravetto Team'}</strong></p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #9fb3c8; font-size: 12px;">
     <p>You're receiving this because you registered for the AI Code Validation Webinar.</p>
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
           to: email,
           from: {
             email: process.env.SENDGRID_FROM_EMAIL,
-            name: process.env.SENDGRID_FROM_NAME || 'AI Validation Team'
+            name: process.env.SENDGRID_FROM_NAME || 'Bravetto Team'
           },
           subject,
           html,
