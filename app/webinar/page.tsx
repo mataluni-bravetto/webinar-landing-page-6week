@@ -72,10 +72,10 @@ export default function WebinarLandingPage() {
               <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
             </div>
             <p className="text-xl md:text-2xl mb-6 text-white/95 max-w-4xl mx-auto leading-relaxed" style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
-              See the exact validation framework we use internally, including the failure patterns we've documented, the scripts we run, and the edge cases that still break things.
+              See the exact validation framework we use internally—a context-aware system that works WITH you, not against you. Includes the failure patterns we've documented, the scripts we run, and how to handle the edge cases that still break things.
             </p>
             <p className="text-lg mb-8 text-white/90 max-w-3xl mx-auto">
-              Free 60-minute technical session. MIT-licensed toolkit included.
+              Free 60-minute technical session. MIT-licensed toolkit included. Learn how validation can respect your judgment while catching real issues.
             </p>
           </div>
 
@@ -183,13 +183,13 @@ export default function WebinarLandingPage() {
                 time: '10:00-30:00', 
                 symbol: '→', 
                 title: '3-Step Validation Pipeline', 
-                desc: 'Static Analysis: AST parsing for hallucinated imports, dependency verification, type inference. Runtime Verification: Automated test generation, property-based testing, mutation testing. Security Scanning: OWASP Top 10 detection, dependency vulnerability checking, secret detection. Each step includes live demos.' 
+                desc: 'Static Analysis: AST parsing for hallucinated imports, dependency verification, type inference—with context awareness across your codebase. Runtime Verification: Automated test generation, property-based testing, mutation testing. Security Scanning: OWASP Top 10 detection, dependency vulnerability checking, secret detection. Each step respects your judgment and learns from feedback.' 
               },
               { 
                 time: '30:00-50:00', 
                 symbol: '>', 
                 title: 'CI/CD Integration', 
-                desc: 'How to add validation to your existing pipeline: GitHub Actions workflow (copy-paste ready), pre-commit hooks for local validation, PR check integration, Slack/Discord notifications. Plus: How to handle false positives without slowing down.' 
+                desc: 'How to add validation to your existing pipeline: GitHub Actions workflow (copy-paste ready), pre-commit hooks for local validation, PR check integration, Slack/Discord notifications. Plus: How to handle false positives without slowing down, and how the system learns from your exceptions.' 
               },
               { 
                 time: '50:00-60:00', 
@@ -215,6 +215,102 @@ export default function WebinarLandingPage() {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* RELATIONAL VALIDATION APPROACH */}
+      <section className="py-20 md:py-32 bg-gradient-to-b from-white via-[#f0f4f8]/30 to-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#102a43]" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+              Validation That Works With You, Not Against You
+            </h2>
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
+              <div className="w-2 h-2 bg-[#486581] rounded-full"></div>
+              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
+            </div>
+            <p className="text-xl text-[#334e68] max-w-3xl mx-auto leading-relaxed mb-8">
+              Most validation tools treat your code as isolated snippets. This framework understands context, learns from your feedback, and respects your judgment.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+            <div className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg">
+              <h3 className="text-xl font-bold mb-4 text-[#102a43]">Traditional Validation Tools</h3>
+              <ul className="space-y-3 text-[#334e68]">
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">×</span>
+                  <span>Generic rules, no context awareness</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">×</span>
+                  <span>Auto-fixes without understanding intent</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">×</span>
+                  <span>No learning from your corrections</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">×</span>
+                  <span>Ignores codebase relationships</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-500 mt-1">×</span>
+                  <span>High false positive rate</span>
+                </li>
+              </ul>
+            </div>
+            <div className="bg-gradient-to-br from-[#f0f4f8] to-white border-2 border-[#486581] rounded-2xl p-8 shadow-lg">
+              <h3 className="text-xl font-bold mb-4 text-[#102a43]">This Validation Framework</h3>
+              <ul className="space-y-3 text-[#334e68]">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">→</span>
+                  <span>Context-aware: understands your codebase structure</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">→</span>
+                  <span>Respects judgment: flags issues, you decide</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">→</span>
+                  <span>Learns from feedback: improves false positive handling</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">→</span>
+                  <span>Maintains relationships: tracks dependencies across files</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">→</span>
+                  <span>&lt;3% false positive rate (documented)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg">
+            <h3 className="text-xl font-bold mb-6 text-[#102a43]">How It Works: Partnership Model</h3>
+            <div className="space-y-6">
+              <div>
+                <h4 className="font-semibold mb-2 text-[#486581]">Context-Aware Detection</h4>
+                <p className="text-[#334e68] leading-relaxed">
+                  The framework analyzes your entire codebase structure, not just isolated files. It understands how modules relate, tracks dependencies, and identifies issues that only appear in context.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2 text-[#486581]">Learning from Your Feedback</h4>
+                <p className="text-[#334e68] leading-relaxed">
+                  When you mark something as a false positive or correct a detection, the framework learns. You can document exceptions, improve patterns, and the system gets better at understanding YOUR codebase.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2 text-[#486581]">Respecting Your Judgment</h4>
+                <p className="text-[#334e68] leading-relaxed">
+                  The framework flags potential issues—you decide what to fix. No auto-fixes that break your code. No assumptions about your intent. Just clear, actionable information.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
