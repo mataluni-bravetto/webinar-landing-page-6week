@@ -1,0 +1,38 @@
+{
+  "name": "ai-validation-toolkit",
+  "version": "1.0.0",
+  "description": "3-Step Validation Pipeline for Production-Ready AI Code",
+  "main": "index.js",
+  "scripts": {
+    "validate": "npm run validate:static && npm run validate:runtime && npm run validate:security",
+    "validate:static": "ts-node validation-scripts/phantom-detector.ts",
+    "validate:runtime": "ts-node validation-scripts/test-generator.ts",
+    "validate:security": "ts-node validation-scripts/security-scanner.ts",
+    "security-scan": "ts-node validation-scripts/security-scanner.ts",
+    "type-check": "ts-node validation-scripts/type-inferencer.ts",
+    "perf-check": "ts-node validation-scripts/perf-profiler.ts",
+    "test": "jest",
+    "build": "tsc"
+  },
+  "keywords": [
+    "ai",
+    "validation",
+    "code-quality",
+    "security",
+    "testing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/typescript-estree": "^6.0.0",
+    "typescript": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
+  }
+}
+

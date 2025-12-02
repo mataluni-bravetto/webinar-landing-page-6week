@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "no-phantom-apis": "error",
+    "no-hardcoded-secrets": "error",
+    "no-sql-injection": "error",
+    "no-xss-vulnerabilities": "error",
+    "prefer-parameterized-queries": "warn",
+    "prefer-async-operations": "warn",
+    "max-nested-loops": ["error", 2],
+    "no-synchronous-file-operations": "warn"
+  },
+  "plugins": ["ai-validation"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  }
+}
+
