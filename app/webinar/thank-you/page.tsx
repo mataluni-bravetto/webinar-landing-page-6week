@@ -11,15 +11,40 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { AddToCalendar } from '../components/AddToCalendar'
 
 export default function WebinarThankYouPage() {
   const [registrationId, setRegistrationId] = useState<string | null>(null)
+  const [googleMeetLink, setGoogleMeetLink] = useState<string | null>(null)
+  const [emailStatus, setEmailStatus] = useState<{ sent: boolean; error?: string } | null>(null)
   
   useEffect(() => {
     const storedId = sessionStorage.getItem('webinar_registration_id')
     if (storedId) {
       setRegistrationId(storedId)
     }
+    
+    // Get email status from sessionStorage if available
+    const emailStatusStr = sessionStorage.getItem('webinar_email_status')
+    if (emailStatusStr) {
+      try {
+        setEmailStatus(JSON.parse(emailStatusStr))
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+    
+    // Fetch Google Meet link
+    fetch('/api/webinar/meet-link')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.meetLink) {
+          setGoogleMeetLink(data.meetLink)
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch Meet link:', err)
+      })
   }, [])
   
   return (
@@ -43,6 +68,49 @@ export default function WebinarThankYouPage() {
             You're successfully registered for the webinar!
           </p>
           
+          {/* Email Status Warning */}
+          {emailStatus && !emailStatus.sent && (
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <span className="text-yellow-600 text-xl">⚠️</span>
+                <div>
+                  <p className="text-yellow-800 font-semibold mb-1">
+                    Email Delivery Notice
+                  </p>
+                  <p className="text-yellow-700 text-sm">
+                    Your registration was successful, but we couldn't send the confirmation email. 
+                    Please check your spam folder or contact support if you don't receive it within 5 minutes.
+                  </p>
+                  {emailStatus.error && (
+                    <p className="text-yellow-600 text-xs mt-2 italic">
+                      Technical note: {emailStatus.error}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Email Delivery Info */}
+          {emailStatus?.sent && (
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <span className="text-blue-600 text-xl">✓</span>
+                <div>
+                  <p className="text-blue-800 font-semibold mb-1">
+                    Email Sent Successfully
+                  </p>
+                  <p className="text-blue-700 text-sm">
+                    Check your inbox for instant access links. If you don't see it within 5 minutes, check your spam folder.
+                  </p>
+                  <p className="text-blue-600 text-xs mt-2">
+                    <strong>Email provider:</strong> SendGrid • <strong>Delivery time:</strong> Usually instant
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          
           {/* Check Email */}
           <div className="bg-gradient-to-br from-[#f0f4f8] to-[#e0e8f0]/50 border-2 border-[#bcccdc] rounded-2xl p-6 mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -65,13 +133,54 @@ export default function WebinarThankYouPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <span><strong>Webinar details</strong> — Date, time, and join link</span>
+                <span><strong>Webinar details</strong> — Date, time, and {googleMeetLink ? 'join link included' : 'join link coming soon'}</span>
               </li>
+              {googleMeetLink && (
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 text-xl">✓</span>
+                  <span><strong>Google Meet link</strong> — <a href={googleMeetLink} target="_blank" rel="noopener noreferrer" className="text-[#486581] hover:underline font-semibold">Join now</a></span>
+                </li>
+              )}
               <li className="flex items-start gap-3">
                 <span className="text-green-600 text-xl">✓</span>
-                <span><strong>Calendar invite</strong> — Sent 24 hours before event</span>
+                <span><strong>Calendar invite</strong> — {googleMeetLink ? 'Already sent' : 'Sent 24 hours before event'}</span>
               </li>
             </ul>
+          </div>
+
+          {/* Direct Access Links - Instant Access (No Email Required) */}
+          <div className="bg-gradient-to-br from-[#f0f4f8] to-[#e0e8f0]/50 border-2 border-[#bcccdc] rounded-2xl p-6 mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <span className="text-2xl font-bold text-[#486581]">⚡</span>
+              <h2 className="text-2xl font-bold text-[#102a43]">
+                Instant Access (No Email Required)
+              </h2>
+            </div>
+            <p className="text-[#334e68] mb-4 text-center">
+              Don't want to wait for email? Access everything right now:
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <a
+                href="https://github.com/bravetto/ai-validation-toolkit"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white border-2 border-[#486581] text-[#486581] hover:bg-[#f0f4f8] transition-all py-4 px-6 rounded-lg font-semibold text-center hover:shadow-lg transform hover:scale-[1.02]"
+              >
+                <div className="text-2xl mb-2">📦</div>
+                <div className="font-bold">GitHub Repository</div>
+                <div className="text-sm text-gray-600 mt-1">12 TypeScript scripts</div>
+              </a>
+              <a
+                href="/VALIDATION_METHODOLOGY_REPORT.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white border-2 border-[#486581] text-[#486581] hover:bg-[#f0f4f8] transition-all py-4 px-6 rounded-lg font-semibold text-center hover:shadow-lg transform hover:scale-[1.02]"
+              >
+                <div className="text-2xl mb-2">📄</div>
+                <div className="font-bold">Methodology Report</div>
+                <div className="text-sm text-gray-600 mt-1">47-page guide</div>
+              </a>
+            </div>
           </div>
           
           {/* Registration ID */}
@@ -114,16 +223,40 @@ export default function WebinarThankYouPage() {
                 <div className="w-12 h-12 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-lg flex items-center justify-center flex-shrink-0">
                   <span className="text-xl font-bold text-white">→</span>
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="text-lg font-bold text-[#102a43] mb-2">
-                    Calendar Invite Coming
+                    {googleMeetLink ? 'Join the Webinar' : 'Calendar Invite Coming'}
                   </h4>
-                  <p className="text-[#334e68] text-sm mb-2">
-                    We'll send you the webinar link and calendar invite 24 hours before the event.
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    (Thursday, December 4, 2025 at 2:00 PM EST)
-                  </p>
+                  {googleMeetLink ? (
+                    <>
+                      <p className="text-[#334e68] text-sm mb-4">
+                        Your Google Meet link is ready! Join the webinar on Thursday, December 4, 2025 at 2:00 PM EST.
+                      </p>
+                      <a
+                        href={googleMeetLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block bg-gradient-to-r from-[#486581] to-[#334e68] text-white px-6 py-3 rounded-lg font-semibold hover:shadow-xl transform hover:scale-105 transition-all mb-4"
+                      >
+                        Join Google Meet →
+                      </a>
+                      <div className="mt-4">
+                        <AddToCalendar variant="button" />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[#334e68] text-sm mb-2">
+                        We'll send you the webinar link and calendar invite 24 hours before the event.
+                      </p>
+                      <p className="text-sm text-gray-500 mb-4">
+                        (Thursday, December 4, 2025 at 2:00 PM EST)
+                      </p>
+                      <div className="mt-4">
+                        <AddToCalendar variant="button" />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

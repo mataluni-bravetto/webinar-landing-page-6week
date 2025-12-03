@@ -44,11 +44,21 @@ Bring your worst AI-generated code. We'll validate it live and discuss framework
 ✓ Accuracy Report (847 functions)
 ✓ 15-Step Integration Checklist
 
-Google Meet: https://meet.google.com/cve-fpwz-gxa
+━━━ JOIN THE WEBINAR ━━━
+
+Google Meet joining info:
+
+Video call link: https://meet.google.com/cve-fpwz-gxa
+
+Or dial: (US) +1 650-667-2928
+PIN: 451 472 747#
+
+More phone numbers: https://tel.meet/cve-fpwz-gxa?pin=3114404973049
+
 Register: https://webinar-landing-page-backup-exur1u1rf-bravetto.vercel.app/webinar`,
   location: 'https://meet.google.com/cve-fpwz-gxa',
   startDate: '2025-12-04T19:00:00Z', // December 4, 2025, 2:00 PM EST = 7:00 PM UTC
-  endDate: '2025-12-04T20:00:00Z', // 60 minutes later
+  endDate: '2025-12-04T20:00:00Z', // 60 minutes later (3:00 PM EST)
   timeZone: 'America/New_York'
 }
 
@@ -72,8 +82,10 @@ function generateCalendarUrls(event: CalendarEvent) {
   const startDateFormatted = formatForGoogle(startDateObj)
   const endDateFormatted = formatForGoogle(endDateObj)
   
-  // Google Calendar URL
-  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startDateFormatted}/${endDateFormatted}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}&ctz=${encodeURIComponent(event.timeZone)}`
+  // Google Calendar URL (with Peacock/Teal color - ID 7, hex #009788)
+  // Color options: Blue (ID 9, hex #4285F4) or Peacock (ID 7, hex #009788)
+  // Using Peacock/Teal as recommended for professional webinars
+  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startDateFormatted}/${endDateFormatted}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}&ctz=${encodeURIComponent(event.timeZone)}&color=%23009788`
   
   // Outlook Calendar URL (ISO format)
   const outlookStart = startDateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
