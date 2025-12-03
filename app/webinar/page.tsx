@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { AGENDA_ITEMS, LEAD_MAGNETS, FAQ_ITEMS, FORM_REASSURANCE } from './content'
 import { formatMetrics } from './metrics'
+import { AddToCalendar } from './components/AddToCalendar'
 
 // Webinar date/time: Thursday, December 4, 2025 at 2:00 PM EST (7:00 PM UTC)
 const WEBINAR_DATE = new Date('2025-12-04T19:00:00Z') // UTC time
@@ -210,11 +211,15 @@ export default function WebinarLandingPage() {
                         href={googleMeetLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block bg-white text-[#486581] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                        className="inline-block bg-white text-[#486581] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 mb-4"
                       >
                         Join Google Meet →
                       </a>
                     )}
+                    {/* Add to Calendar */}
+                    <div className="mt-4">
+                      <AddToCalendar variant="button" />
+                    </div>
                   </div>
                 </div>
               </div>
