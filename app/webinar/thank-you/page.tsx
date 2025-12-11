@@ -230,8 +230,13 @@ export default function WebinarThankYouPage() {
                   {googleMeetLink ? (
                     <>
                       <p className="text-[#334e68] text-sm mb-4">
-                        Your Google Meet link is ready! Join the webinar on Thursday, December 4, 2025 at 2:00 PM EST.
+                        <strong>6 Week Webinar Series | Ai Reality Check</strong><br />
+                        Join the webinar on <strong>Tuesday, December 16, 2025</strong> at <strong>11:00 AM – 12:30 PM EST</strong> (90 minutes).
                       </p>
+                      <div className="text-xs text-[#627d98] mb-4">
+                        <p>Or dial: <a href="tel:+16505973592" className="text-[#486581] hover:underline">+1 650-597-3592</a></p>
+                        <p>PIN: <span className="font-mono">697 719 929#</span></p>
+                      </div>
                       <a
                         href={googleMeetLink}
                         target="_blank"

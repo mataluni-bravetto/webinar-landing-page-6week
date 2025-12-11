@@ -1,84 +1,168 @@
 'use client'
 
 /**
- * WEBINAR LANDING PAGE - YAGNI APPROVED, PRAGMATICALLY PERFECT
+ * MASTER AI WEBINAR LANDING PAGE
  * 
- * Pattern: Webinar × Conversion × YAGNI × ONE
- * Guardians: YAGNI × JØHN × AEYON
+ * Pattern: Living Canvas × Webinar × ONE
+ * Guardians: AEYON × META × YAGNI
  * 
- * This is THE landing page. It just works.
- * All content inline. Zero component dependencies. Maximum conversion.
+ * 6-Week Webinar Series Landing Page
+ * Interactive p5.js canvas with particle animation
  */
 
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Script from 'next/script'
 import { useRouter } from 'next/navigation'
-import { AGENDA_ITEMS, LEAD_MAGNETS, FAQ_ITEMS, FORM_REASSURANCE } from './content'
-import { formatMetrics } from './metrics'
-import { AddToCalendar } from './components/AddToCalendar'
 
-// Webinar date/time: Thursday, December 4, 2025 at 2:00 PM EST (7:00 PM UTC)
-const WEBINAR_DATE = new Date('2025-12-04T19:00:00Z') // UTC time
+// Webinar: Tuesday, December 16, 2025 at 11:00 AM EST (4:00 PM UTC)
+// Duration: 90 minutes (11:00 AM - 12:30 PM EST)
+const WEBINAR_START_DATE = new Date('2025-12-16T16:00:00Z') // 11:00 AM EST = 4:00 PM UTC
+const WEBINAR_END_DATE = new Date('2025-12-16T17:30:00Z') // 12:30 PM EST = 5:30 PM UTC
+const GOOGLE_MEET_LINK = 'https://meet.google.com/mgm-wojn-kes'
+const GOOGLE_MEET_PHONE = '+1 650-597-3592'
+const GOOGLE_MEET_PIN = '697 719 929'
 
-export default function WebinarLandingPage() {
+export default function MasterAIWebinarPage() {
   const router = useRouter()
+  const canvasRef = useRef<HTMLDivElement>(null)
+  const p5InstanceRef = useRef<any>(null)
+  const [countdown, setCountdown] = useState('Starting Soon...')
+  const [mounted, setMounted] = useState(false)
   const [formData, setFormData] = useState({ firstName: '', email: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: false })
-  const [showScrollTop, setShowScrollTop] = useState(false)
-  const [googleMeetLink, setGoogleMeetLink] = useState<string | null>(null)
   const [formErrors, setFormErrors] = useState<{ firstName?: string; email?: string; submit?: string }>({})
+  const registrationRef = useRef<HTMLDivElement>(null)
 
-  // Scroll to top handler
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // Show scroll-to-top button when scrolled down
   useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    setMounted(true)
   }, [])
 
   useEffect(() => {
+    if (!mounted) return
+
     const updateCountdown = () => {
-      const now = new Date()
-      const diff = WEBINAR_DATE.getTime() - now.getTime()
-      
-      if (diff <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true })
-        return
+      const now = new Date().getTime()
+      const distance = WEBINAR_START_DATE.getTime() - now
+
+      if (distance > 0) {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24))
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000)
+
+        setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`)
+      } else {
+        setCountdown('Starting Soon...')
       }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-
-      setTimeLeft({ days, hours, minutes, seconds, isPast: false })
     }
 
     updateCountdown()
     const interval = setInterval(updateCountdown, 1000)
     return () => clearInterval(interval)
-  }, [])
+  }, [mounted])
 
-  // Fetch Google Meet link on mount
   useEffect(() => {
-    fetch('/api/webinar/meet-link')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.meetLink) {
-          setGoogleMeetLink(data.meetLink)
+    if (!mounted || !canvasRef.current) return
+
+    const loadP5 = () => {
+      if (typeof window !== 'undefined' && (window as any).p5) {
+        const p5 = (window as any).p5
+
+        // Clean up existing instance
+        if (p5InstanceRef.current) {
+          p5InstanceRef.current.remove()
         }
-      })
-      .catch(err => {
-        console.error('Failed to fetch Meet link:', err)
-        // Silent fail - Meet link is optional
-      })
-  }, [])
+
+        const sketch = (p: any) => {
+          let particles: any[] = []
+
+          p.setup = () => {
+            p.createCanvas(p.windowWidth, p.windowHeight)
+            const canvas = p.canvas
+            if (canvas && canvasRef.current) {
+              canvasRef.current.appendChild(canvas)
+            }
+
+            for (let i = 0; i < 100; i++) {
+              particles.push({
+                x: p.random(p.width),
+                y: p.random(p.height),
+                vx: p.random(-1, 1),
+                vy: p.random(-1, 1),
+                size: p.random(2, 5),
+                hue: p.random(40, 60)
+              })
+            }
+          }
+
+          p.draw = () => {
+            p.background(10, 10, 18, 20)
+
+            // Particles flowing toward center (learning convergence)
+            for (let particle of particles) {
+              let dx = p.width / 2 - particle.x
+              let dy = p.height / 2 - particle.y
+              let dist = p.sqrt(dx * dx + dy * dy)
+
+              if (dist > 0) {
+                particle.vx += (dx / dist) * 0.01
+                particle.vy += (dy / dist) * 0.01
+              }
+
+              particle.vx *= 0.98
+              particle.vy *= 0.98
+              particle.x += particle.vx
+              particle.y += particle.vy
+
+              p.push()
+              p.colorMode(p.HSB)
+              p.fill(particle.hue, 100, 100, 150)
+              p.noStroke()
+              p.ellipse(particle.x, particle.y, particle.size, particle.size)
+              p.pop()
+            }
+          }
+
+          p.windowResized = () => {
+            p.resizeCanvas(p.windowWidth, p.windowHeight)
+          }
+        }
+
+        p5InstanceRef.current = new p5(sketch)
+      }
+    }
+
+    // Check if p5 is already loaded
+    if ((window as any).p5) {
+      loadP5()
+    } else {
+      // Wait for script to load
+      const checkP5 = setInterval(() => {
+        if ((window as any).p5) {
+          clearInterval(checkP5)
+          loadP5()
+        }
+      }, 100)
+
+      return () => {
+        clearInterval(checkP5)
+        if (p5InstanceRef.current) {
+          p5InstanceRef.current.remove()
+        }
+      }
+    }
+
+    return () => {
+      if (p5InstanceRef.current) {
+        p5InstanceRef.current.remove()
+      }
+    }
+  }, [mounted])
+
+  const handleRegisterClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    registrationRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   const validateForm = (): boolean => {
     const errors: typeof formErrors = {}
@@ -123,7 +207,6 @@ export default function WebinarLandingPage() {
           sessionStorage.setItem('webinar_registration_id', data.registrationId)
         }
         
-        // Store email status for thank-you page
         sessionStorage.setItem('webinar_email_status', JSON.stringify({
           sent: data.emailSent === true,
           error: data.emailError || undefined
@@ -142,646 +225,241 @@ export default function WebinarLandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* HERO SECTION */}
-      <section className="relative bg-gradient-to-br from-[#102a43] via-[#334e68] to-[#486581] text-white py-20 md:py-32 overflow-hidden">
-        {/* Background Decorations */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#102a43]/50 via-transparent to-[#486581]/30"></div>
-          <div className="absolute top-20 right-20 w-96 h-96 bg-[#829ab1]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-[#9fb3c8]/10 rounded-full blur-3xl"></div>
-        </div>
+    <>
+      <Script
+        src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"
+        strategy="afterInteractive"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@300;400;600;700&display=swap"
+        rel="stylesheet"
+      />
+      <div className="relative min-h-screen bg-[#0a0a12] text-white overflow-x-hidden">
+        {/* Canvas Container */}
+        <div
+          ref={canvasRef}
+          id="canvas-container"
+          className="fixed top-0 left-0 w-full h-full z-0"
+        />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-          {/* Headline */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-2xl" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', letterSpacing: '-0.02em', textShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
-              The 3-Step Validation Pipeline That Catches AI Code Failures Before Production
-            </h1>
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-              <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-            </div>
-            <p className="text-xl md:text-2xl mb-6 text-white/95 max-w-4xl mx-auto leading-relaxed" style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}>
-              Stop debugging AI-generated code blind. See the exact validation framework we use internally—a context-aware system that catches the subtle bugs that look correct but break under real-world load. Works WITH your judgment, not against it.
+        {/* Content */}
+        <div className="relative z-10 min-h-screen px-8 py-16 max-w-[1200px] mx-auto">
+          <h1
+            className="font-['Lora'] text-[clamp(3rem,8vw,6rem)] font-bold leading-[1.1] mb-8"
+            style={{
+              background: 'linear-gradient(135deg, #fff, #ffd700, #ff6b35)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            6 Week Webinar Series<br />
+            Ai Reality Check
+          </h1>
+
+          <p className="text-2xl text-center text-gray-400 mb-8">
+            Transform your AI mastery. 6 weeks. 6 hours. FREE.
+          </p>
+          
+          <div className="text-center mb-8 text-lg text-gray-300">
+            <p className="mb-2">
+              <strong>Tuesday, December 16, 2025</strong>
             </p>
-            <p className="text-lg mb-4 text-white/90 max-w-3xl mx-auto">
-              Free 60-minute technical session. <strong>Toolkit delivered instantly upon registration. Start validating your code today.</strong> MIT-licensed, open source. Ship knowing it works—not hoping it does.
+            <p className="mb-2">
+              11:00 AM – 12:30 PM EST
             </p>
-            <p className="text-base md:text-lg mb-8 text-white/95 max-w-3xl mx-auto font-medium">
-              Save 40+ hours of debugging per month. Catch failures in 12-29ms instead of hours. See exactly how.
+            <p className="text-sm text-gray-400">
+              (90 minutes)
             </p>
-            
-            {/* Countdown Timer */}
-            {!timeLeft.isPast && (
-              <div className="max-w-2xl mx-auto mb-8">
-                <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6">
-                  <div className="text-center mb-4">
-                    <p className="text-white/90 text-sm mb-2">Webinar starts in:</p>
-                    <div className="flex items-center justify-center gap-4 md:gap-6">
-                      <div className="flex flex-col items-center">
-                        <div className="text-3xl md:text-4xl font-bold text-white">{timeLeft.days}</div>
-                        <div className="text-xs text-white/80 uppercase">Days</div>
-                      </div>
-                      <div className="text-2xl text-white/60">:</div>
-                      <div className="flex flex-col items-center">
-                        <div className="text-3xl md:text-4xl font-bold text-white">{String(timeLeft.hours).padStart(2, '0')}</div>
-                        <div className="text-xs text-white/80 uppercase">Hours</div>
-                      </div>
-                      <div className="text-2xl text-white/60">:</div>
-                      <div className="flex flex-col items-center">
-                        <div className="text-3xl md:text-4xl font-bold text-white">{String(timeLeft.minutes).padStart(2, '0')}</div>
-                        <div className="text-xs text-white/80 uppercase">Minutes</div>
-                      </div>
-                      <div className="text-2xl text-white/60">:</div>
-                      <div className="flex flex-col items-center">
-                        <div className="text-3xl md:text-4xl font-bold text-white">{String(timeLeft.seconds).padStart(2, '0')}</div>
-                        <div className="text-xs text-white/80 uppercase">Seconds</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-center pt-4 border-t border-white/20">
-                    <p className="text-white/90 text-xs mb-4">
-                      <strong className="text-white">Thursday, December 4, 2025</strong><br />
-                      11:00 AM PST / 2:00 PM EST
-                    </p>
-                    {googleMeetLink && (
-                      <a
-                        href={googleMeetLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block bg-white text-[#486581] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 mb-4"
-                      >
-                        Join Google Meet →
-                      </a>
-                    )}
-                    {/* Add to Calendar */}
-                    <div className="mt-4">
-                      <AddToCalendar variant="button" />
-                    </div>
-                  </div>
-                </div>
+          </div>
+
+          <div
+            className="text-[clamp(2rem,5vw,4rem)] font-bold text-[#ffd700] my-12 text-center"
+            id="countdown"
+          >
+            {countdown}
+          </div>
+          
+          {/* Google Meet Link Section */}
+          <div className="max-w-2xl mx-auto mb-12 bg-white/10 backdrop-blur-md border border-[#ffd700]/30 rounded-[20px] p-6 text-center">
+            <h3 className="text-xl font-bold mb-4 text-[#ffd700]">Join the Webinar</h3>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-gray-300 mb-2">Video call link:</p>
+                <a
+                  href={GOOGLE_MEET_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-gradient-to-r from-[#ffd700] to-[#ff6b35] text-black px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+                >
+                  Join Google Meet →
+                </a>
               </div>
-            )}
+              <div className="text-sm text-gray-400">
+                <p>Or dial: <a href={`tel:${GOOGLE_MEET_PHONE}`} className="text-[#ffd700] hover:underline">{GOOGLE_MEET_PHONE}</a></p>
+                <p>PIN: <span className="font-mono">{GOOGLE_MEET_PIN}#</span></p>
+              </div>
+            </div>
           </div>
 
-          {/* Why Free Transparency */}
-          <div className="max-w-2xl mx-auto mb-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 text-center">
-            <p className="text-white/95 text-sm leading-relaxed">
-              <strong className="text-white">Why free?</strong> We want you to experience the validation system before asking for anything. Zero risk for you. The methodology is open source—see exactly how it works, use it yourself, improve it if you can.
-            </p>
-          </div>
-
-          {/* Registration Form */}
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white/15 backdrop-blur-xl border border-white/30 shadow-2xl rounded-2xl overflow-hidden relative p-8 md:p-10">
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-white/90 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      id="firstName"
-                      type="text"
-                      placeholder="First Name"
-                      required
-                      autoCapitalize="off"
-                      autoCorrect="off"
-                      autoComplete="given-name"
-                      value={formData.firstName}
-                      onChange={(e) => {
-                        setFormData({ ...formData, firstName: e.target.value })
-                        if (formErrors.firstName) {
-                          setFormErrors({ ...formErrors, firstName: undefined })
-                        }
-                      }}
-                      className={`w-full px-4 py-3 rounded-lg bg-white/10 border ${
-                        formErrors.firstName ? 'border-red-400' : 'border-white/20'
-                      } text-white placeholder-white/70 focus:outline-none focus:border-white transition-all`}
-                    />
-                    {formErrors.firstName && (
-                      <p className="text-red-400 text-sm mt-1">{formErrors.firstName}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-white/90 mb-2">
-                      Email
-                    </label>
-                    <input
-                      id="email"
-                      type="email"
-                      placeholder="your@email.com"
-                      required
-                      autoCapitalize="off"
-                      autoCorrect="off"
-                      autoComplete="email"
-                      inputMode="email"
-                      value={formData.email}
-                      onChange={(e) => {
-                        setFormData({ ...formData, email: e.target.value })
-                        if (formErrors.email) {
-                          setFormErrors({ ...formErrors, email: undefined })
-                        }
-                      }}
-                      className={`w-full px-4 py-3 rounded-lg bg-white/10 border ${
-                        formErrors.email ? 'border-red-400' : 'border-white/20'
-                      } text-white placeholder-white/70 focus:outline-none focus:border-white transition-all`}
-                    />
-                    {formErrors.email && (
-                      <p className="text-red-400 text-sm mt-1">{formErrors.email}</p>
-                    )}
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-16">
+            {[
+              {
+                number: 1,
+                title: 'The AI Reality Check',
+                description: 'Discover hidden costs and 7 failure patterns',
+              },
+              {
+                number: 2,
+                title: 'Multi-Platform Mastery',
+                description: 'Master multiple AI platforms without losing your mind',
+              },
+              {
+                number: 3,
+                title: 'AI Biases & Fallacies',
+                description: 'Recognize and overcome AI limitations',
+              },
+              {
+                number: 4,
+                title: 'Breaking the Loop',
+                description: 'Escape recursive AI patterns',
+              },
+              {
+                number: 5,
+                title: 'Advanced Mastery',
+                description: 'Take your AI skills to the next level',
+              },
+              {
+                number: 6,
+                title: 'The AbëONE Revelation',
+                description: 'The future of AI-human collaboration',
+              },
+            ].map((week) => (
+              <div
+                key={week.number}
+                className="bg-white/5 border border-[#ffd700]/30 rounded-[20px] p-8 transition-all duration-300 hover:-translate-y-[10px] hover:border-[#ffd700] hover:shadow-[0_20px_40px_rgba(255,215,0,0.3)]"
+              >
+                <div className="text-5xl text-[#ffd700] font-bold mb-4">
+                  {week.number}
                 </div>
+                <div className="font-['Lora'] text-2xl text-white mb-4">
+                  {week.title}
+                </div>
+                <p className="text-gray-300">{week.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-16">
+            <a
+              href="#register"
+              onClick={handleRegisterClick}
+              className="inline-block px-12 py-5 bg-gradient-to-r from-[#ffd700] to-[#ff6b35] text-black text-xl font-bold rounded-[50px] mt-8 transition-all duration-300 hover:scale-105 hover:shadow-[0_15px_40px_rgba(255,215,0,0.5)]"
+            >
+              Register Now — FREE
+            </a>
+          </div>
+
+          {/* Registration Form Section */}
+          <div ref={registrationRef} id="register" className="mt-24 pt-16">
+            <div className="bg-white/10 backdrop-blur-md border border-[#ffd700]/30 rounded-[20px] p-8 md:p-12 max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 font-['Lora']">
+                Register for the 6-Week Series
+              </h2>
+              <p className="text-center text-gray-300 mb-8">
+                Join us for this FREE webinar series. Transform your AI mastery in just 6 weeks.
+              </p>
+              
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-300 mb-2">
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    required
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                    autoComplete="given-name"
+                    value={formData.firstName}
+                    onChange={(e) => {
+                      setFormData({ ...formData, firstName: e.target.value })
+                      if (formErrors.firstName) {
+                        setFormErrors({ ...formErrors, firstName: undefined })
+                      }
+                    }}
+                    className={`w-full px-4 py-3 rounded-lg bg-white/10 border ${
+                      formErrors.firstName ? 'border-red-400' : 'border-white/20'
+                    } text-white placeholder-white/70 focus:outline-none focus:border-[#ffd700] transition-all`}
+                  />
+                  {formErrors.firstName && (
+                    <p className="text-red-400 text-sm mt-1">{formErrors.firstName}</p>
+                  )}
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="your@email.com"
+                    required
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                    autoComplete="email"
+                    inputMode="email"
+                    value={formData.email}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value })
+                      if (formErrors.email) {
+                        setFormErrors({ ...formErrors, email: undefined })
+                      }
+                    }}
+                    className={`w-full px-4 py-3 rounded-lg bg-white/10 border ${
+                      formErrors.email ? 'border-red-400' : 'border-white/20'
+                    } text-white placeholder-white/70 focus:outline-none focus:border-[#ffd700] transition-all`}
+                  />
+                  {formErrors.email && (
+                    <p className="text-red-400 text-sm mt-1">{formErrors.email}</p>
+                  )}
+                </div>
+                
                 {formErrors.submit && (
-                  <div className="mb-4 p-3 bg-red-500/20 border border-red-400 rounded-lg">
+                  <div className="p-3 bg-red-500/20 border border-red-400 rounded-lg">
                     <p className="text-red-200 text-sm">{formErrors.submit}</p>
                   </div>
                 )}
+                
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-[#486581] via-[#627d98] to-[#486581] hover:from-[#627d98] hover:via-[#486581] hover:to-[#334e68] text-white shadow-2xl hover:shadow-[#486581]/50 transform hover:scale-[1.02] transition-all duration-300 font-bold text-lg py-6 md:py-6 min-h-[52px] rounded-xl border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed relative"
+                  className="w-full px-12 py-5 bg-gradient-to-r from-[#ffd700] to-[#ff6b35] text-black text-xl font-bold rounded-[50px] transition-all duration-300 hover:scale-105 hover:shadow-[0_15px_40px_rgba(255,215,0,0.5)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Sending...
+                      Registering...
                     </span>
                   ) : (
-                    "Send My Toolkit Now"
+                    'Register Now — FREE'
                   )}
                 </button>
-                {/* Form Micro-Reassurance */}
-                <p className="text-sm text-white/70 mt-2 text-center">
-                  ✓ Instant toolkit access · ✓ No credit card · ✓ MIT licensed
+                
+                <p className="text-sm text-gray-400 text-center mt-4">
+                  ✓ Free registration · ✓ No credit card required · ✓ Instant access
                 </p>
-                {/* Privacy Policy & Data Usage */}
-                <div className="mt-4 text-xs text-white/70 text-center space-y-2">
-                  <p>
-                    By registering, you agree to our{' '}
-                    <a 
-                      href="/privacy" 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline hover:text-white"
-                    >
-                      Privacy Policy
-                    </a>
-                    .
-                  </p>
-                  <div className="text-white/60">
-                    <p className="mb-1">
-                      <strong>How we use your data:</strong>
-                    </p>
-                    <ul className="list-disc list-inside space-y-0.5 text-[10px]">
-                      <li>Send webinar confirmation email</li>
-                      <li>Create calendar event with Google Meet link</li>
-                      <li>Send webinar reminders</li>
-                      <li>Provide instant access to validation toolkit</li>
-                    </ul>
-                    <p className="mt-1">
-                      We never sell your data. Unsubscribe anytime.
-                    </p>
-                  </div>
-                  {/* Security Indicators */}
-                  <div className="mt-3 flex items-center justify-center gap-2 text-xs text-white/60">
-                    <span>🔒</span>
-                    <span>Secure registration • SSL encrypted • GDPR compliant</span>
-                  </div>
-                </div>
-                {/* Sub-CTA Reassurance */}
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-2 md:gap-3 text-xs md:text-sm text-white/90 font-medium">
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-green-400 font-bold">✓</span> {formatMetrics.scripts()} TypeScript scripts
-                  </span>
-                  <span className="text-white/40 hidden sm:inline">•</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-green-400 font-bold">✓</span> {formatMetrics.guidePages()}-page guide
-                  </span>
-                  <span className="text-white/40 hidden sm:inline">•</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-green-400 font-bold">✓</span> Instant access
-                  </span>
-                </div>
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-white/80">
-                  <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">→</span> Instant toolkit access
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">✓</span> No credit card required
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">◉</span> {googleMeetLink ? 'Join link available' : 'Calendar invite (24h before)'}
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span className="text-xs font-semibold">@</span> Unsubscribe anytime
-                  </span>
-                </div>
               </form>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* TOOLKIT PREVIEW SECTION */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#102a43]">
-            What's Inside the Toolkit
-          </h3>
-          
-          <div className="bg-white rounded-lg shadow-md overflow-hidden border-2 border-[#d9e2ec]">
-            <div className="p-4 border-b bg-gray-100">
-              <span className="text-sm font-medium text-gray-700">
-                💻 Script Preview: phantom-detector.ts
-              </span>
-            </div>
-            <div className="p-6">
-              <pre className="font-mono text-sm bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
-                <code>{`// phantom-detector.ts
-export const detectPhantomAPI = async (
-  code: string
-): Promise<PhantomResult[]> => {
-  const imports = extractImports(code);
-  const phantoms = imports.filter(
-    i => !existsInRegistry(i)
-  );
-  return phantoms.map(formatResult);
-};`}</code>
-              </pre>
-              <p className="mt-4 text-sm text-gray-600">
-                <strong>12 TypeScript scripts</strong> included. Copy-paste ready. Fully commented and tested. Includes phantom API detection, security scanning, and type inference.
-              </p>
-              <p className="mt-2 text-xs text-gray-500">
-                All scripts are MIT licensed and copy-paste ready
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* WHAT YOU'LL LEARN */}
-      <section className="py-20 md:py-32 bg-gradient-to-b from-white via-[#f0f4f8]/30 to-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#102a43]" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              Technical Agenda: What We'll Cover in 60 Minutes
-            </h2>
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-              <div className="w-2 h-2 bg-[#486581] rounded-full"></div>
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-            </div>
-            <p className="text-xl text-[#334e68] max-w-3xl mx-auto leading-relaxed">
-              See the exact validation framework we use internally, including live demos and real code examples
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {AGENDA_ITEMS.map((feature, idx) => (
-              <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#9fb3c8] transition-all duration-300 hover:-translate-y-2">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <span className="text-2xl font-bold text-white">{feature.symbol}</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-[#486581] mb-2">{feature.time}</div>
-                    <h3 className="text-xl font-bold mb-3 text-[#102a43]">
-                      {feature.title}
-                    </h3>
-                  </div>
-                </div>
-                <p className="text-[#334e68] leading-relaxed">
-                  {feature.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* RELATIONAL VALIDATION APPROACH */}
-      <section className="py-20 md:py-32 bg-gradient-to-b from-white via-[#f0f4f8]/30 to-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#102a43]" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              Validation That Works With You, Not Against You
-            </h2>
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-              <div className="w-2 h-2 bg-[#486581] rounded-full"></div>
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-            </div>
-            <p className="text-xl text-[#334e68] max-w-3xl mx-auto leading-relaxed mb-8">
-              Most validation tools treat your code as isolated snippets. This framework understands context, learns from your feedback, and respects your judgment.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
-            <div className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg">
-              <h3 className="text-xl font-bold mb-4 text-[#102a43]">Traditional Validation Tools</h3>
-              <ul className="space-y-3 text-[#334e68]">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">×</span>
-                  <span>Generic rules, no context awareness</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">×</span>
-                  <span>Auto-fixes without understanding intent</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">×</span>
-                  <span>No learning from your corrections</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">×</span>
-                  <span>Ignores codebase relationships</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">×</span>
-                  <span>High false positive rate</span>
-                </li>
-              </ul>
-            </div>
-            <div className="bg-gradient-to-br from-[#f0f4f8] to-white border-2 border-[#486581] rounded-2xl p-8 shadow-lg">
-              <h3 className="text-xl font-bold mb-4 text-[#102a43]">This Validation Framework</h3>
-              <ul className="space-y-3 text-[#334e68]">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-1">→</span>
-                  <span>Context-aware: understands your codebase structure</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-1">→</span>
-                  <span>Respects judgment: flags issues, you decide</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-1">→</span>
-                  <span>Learns from feedback: improves false positive handling</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-1">→</span>
-                  <span>Maintains relationships: tracks dependencies across files</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-1">→</span>
-                  <span>&lt;3% false positive rate (documented)</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="max-w-4xl mx-auto bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg">
-            <h3 className="text-xl font-bold mb-6 text-[#102a43]">How It Works: Partnership Model</h3>
-            <div className="space-y-6">
-              <div>
-                <h4 className="font-semibold mb-2 text-[#486581]">Context-Aware Detection</h4>
-                <p className="text-[#334e68] leading-relaxed">
-                  The framework analyzes your entire codebase structure, not just isolated files. It understands how modules relate, tracks dependencies, and identifies issues that only appear in context.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2 text-[#486581]">Learning from Your Feedback</h4>
-                <p className="text-[#334e68] leading-relaxed">
-                  When you mark something as a false positive or correct a detection, the framework learns. You can document exceptions, improve patterns, and the system gets better at understanding YOUR codebase.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2 text-[#486581]">Respecting Your Judgment</h4>
-                <p className="text-[#334e68] leading-relaxed">
-                  The framework flags potential issues—you decide what to fix. No auto-fixes that break your code. No assumptions about your intent. Just clear, actionable information.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SOCIAL PROOF */}
-      <section className="py-20 md:py-32 bg-gradient-to-b from-white via-[#f0f4f8]/20 to-white relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#102a43]" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              New Technical Session
-            </h2>
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-              <div className="w-2 h-2 bg-[#486581] rounded-full"></div>
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-            </div>
-            <p className="text-xl text-[#334e68] max-w-3xl mx-auto leading-relaxed mb-8">
-              This is a new deep-dive format. Be among the first engineers to experience it and help us improve. Your feedback shapes the methodology.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto bg-gradient-to-br from-[#f0f4f8] via-white to-[#f0f4f8]/50 border-2 border-[#bcccdc] rounded-3xl p-10 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#bcccdc]/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#9fb3c8]/20 rounded-full blur-3xl"></div>
-            <div className="relative z-10 text-center">
-              <h3 className="text-2xl font-bold mb-6 text-[#102a43]">
-                The Methodology is Open Source
-              </h3>
-              <p className="text-[#334e68] leading-relaxed mb-6">
-                You can audit every check, see the test corpus, and verify our accuracy claims yourself. We're not asking for trust—we're showing our work.
-              </p>
-              <div className="mb-6">
-                <a 
-                  href="https://github.com/bravetto/ai-validation-toolkit" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-block bg-gradient-to-r from-[#486581] to-[#334e68] hover:from-[#334e68] hover:to-[#486581] text-white px-6 py-3 md:py-3 min-h-[44px] rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
-                >
-                  View Repository on GitHub →
-                </a>
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-6 text-[#334e68]">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-[#486581]">✓</span>
-                  <span className="text-sm font-medium">MIT Licensed</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-[#486581]">→</span>
-                  <span className="text-sm font-medium">Fully Transparent</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-bold text-[#486581]">●</span>
-                  <span className="text-sm font-medium">Production Tested</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* LEAD MAGNETS */}
-      <section className="py-20 md:py-32 bg-gradient-to-b from-white via-[#f0f4f8]/30 to-white relative overflow-hidden">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#102a43]" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              The Validation Toolkit (MIT Licensed)
-            </h2>
-            <p className="text-lg text-[#334e68] max-w-2xl mx-auto mb-6">
-              What you'll get immediately after registration:
-            </p>
-          </div>
-
-          <div className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg mb-8">
-            <h3 className="text-xl font-bold mb-6 text-[#102a43]">What's in the repo:</h3>
-            <div className="space-y-4 font-mono text-sm text-[#334e68]">
-              <div className="pl-4">
-                <div className="font-semibold text-[#102a43] mb-2">/validation-scripts/</div>
-                <div className="pl-4 space-y-1">
-                  <div>├── phantom-detector.ts — catches hallucinated APIs</div>
-                  <div>├── security-scanner.ts — OWASP pattern matching</div>
-                  <div>├── test-generator.ts — automated test scaffolding</div>
-                  <div>├── type-inferencer.ts — adds types to untyped AI code</div>
-                  <div>└── perf-profiler.ts — identifies performance issues</div>
-                </div>
-              </div>
-              <div className="pl-4">
-                <div className="font-semibold text-[#102a43] mb-2">/configs/</div>
-                <div className="pl-4 space-y-1">
-                  <div>├── eslint-ai-rules.json — custom lint rules for AI code</div>
-                  <div>├── github-action.yml — ready-to-use CI workflow</div>
-                  <div>└── patterns.json — known anti-pattern definitions</div>
-                </div>
-              </div>
-              <div className="pl-4">
-                <div className="font-semibold text-[#102a43] mb-2">/docs/</div>
-                <div className="pl-4 space-y-1">
-                  <div>├── methodology.md — how and why each check works</div>
-                  <div>├── false-positives.md — handling edge cases</div>
-                  <div>├── contributing.md — how to add new patterns</div>
-                  <div>└── benchmarks.md — accuracy across test corpus</div>
-                </div>
-              </div>
-              <div className="pl-4 pt-2">
-                <div className="font-semibold text-[#102a43]">README.md — quick start in 5 minutes</div>
-              </div>
-            </div>
-            <p className="mt-6 text-[#334e68] italic">
-              Star it, fork it, improve it. No license restrictions.
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            {[
-              { symbol: '→', title: '12 TypeScript Validation Functions', desc: 'Copy-paste ready implementations. Fully commented and tested. Includes phantom API detection, security scanning, and type inference. Delivered instantly upon registration.' },
-              { symbol: '>', title: 'GitHub Actions Workflow', desc: 'Ready-to-use CI/CD integration. Pre-commit hooks included. Works with React, Vue, Next.js, FastAPI, Express. Access immediately after opt-in.' },
-              { symbol: '●', title: 'Accuracy Report', desc: `Test results across ${formatMetrics.validated()} AI-generated functions. Shows what we caught, what we missed, and why. Includes edge case documentation. Available right now.` },
-              { symbol: '→', title: '47-Page Methodology Guide', desc: 'Complete technical documentation explaining how each validation step works, why it matters, and how to extend it. Instant access via email.' },
-              { symbol: '✓', title: '15-Step Integration Checklist', desc: 'Actionable checklist for adding validation to your existing stack. Includes troubleshooting guide. Included in instant delivery.' }
-            ].map((magnet, idx) => (
-              <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#9fb3c8] transition-all duration-300 hover:-translate-y-1">
-                <div className="flex items-start gap-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                    <span className="text-2xl font-bold text-white">{magnet.symbol}</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-2 text-[#102a43]">
-                      {magnet.title}
-                    </h3>
-                    <p className="text-[#334e68] leading-relaxed">
-                      {magnet.desc}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 md:py-32 bg-white relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#102a43]" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              Frequently Asked Questions
-            </h2>
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-              <div className="w-2 h-2 bg-[#486581] rounded-full"></div>
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[#9fb3c8] to-transparent"></div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {FAQ_ITEMS.map((faq, idx) => (
-              <div key={idx} className="bg-white border-2 border-[#d9e2ec] rounded-2xl p-8 shadow-md hover:shadow-xl hover:border-[#9fb3c8] transition-all duration-300">
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-[#486581] to-[#334e68] rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-sm font-bold text-white">?</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-3 text-[#102a43]">
-                      {faq.q}
-                    </h3>
-                    <p className="text-[#334e68] leading-relaxed">
-                      {faq.a}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="py-24 md:py-32 bg-gradient-to-br from-[#102a43] via-[#334e68] to-[#486581] text-white relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#102a43]/50 via-transparent to-[#486581]/30"></div>
-          <div className="absolute top-20 right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white drop-shadow-2xl" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-            Ready to Get Started?
-          </h2>
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-          </div>
-          <p className="text-xl mb-8 text-white/95 leading-relaxed max-w-2xl mx-auto" style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)' }}>
-            Get your validation toolkit above. Join the 60-minute technical deep-dive. Free, open source, MIT licensed.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-white/80">
-            <span className="flex items-center gap-2">
-              <span className="text-xs font-semibold">→</span> Instant toolkit access
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-xs font-semibold">✓</span> No credit card required
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-xs font-semibold">◉</span> {googleMeetLink ? 'Join link available' : 'Calendar invite (24h before)'}
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-xs font-semibold">@</span> Unsubscribe anytime
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Scroll to Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-[#486581] to-[#334e68] text-white p-4 rounded-full shadow-2xl hover:shadow-[#486581]/50 transform hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 min-w-[52px] min-h-[52px] flex items-center justify-center"
-          aria-label="Scroll to top"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-        </button>
-      )}
-    </div>
+      </div>
+    </>
   )
 }
-

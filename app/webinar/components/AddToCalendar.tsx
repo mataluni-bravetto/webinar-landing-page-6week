@@ -19,46 +19,37 @@ interface CalendarEvent {
 
 // Webinar details - single source of truth
 const WEBINAR_EVENT: CalendarEvent = {
-  title: 'AI Code Validation Webinar',
-  description: `Join us for a 60-minute technical deep-dive on validating AI-generated code before production.
+  title: '6 Week Webinar Series | Ai Reality Check',
+  description: `Join us for the first session of our 6-Week Webinar Series: Ai Reality Check.
 
-━━━ TECHNICAL AGENDA ━━━
+━━━ WEBINAR DETAILS ━━━
 
-0:00-10:00 | AI Code Failure Analysis
-What percentage of AI-generated code actually works? We tested 1,200+ functions across Claude, GPT-4, and Copilot. Results: 40-60% contain phantom features, 27.25% have security vulnerabilities, 15% fail silently with edge cases.
-
-10:00-30:00 | 3-Step Validation Pipeline
-Static Analysis: AST parsing for hallucinated imports, dependency verification, type inference. Runtime Verification: Automated test generation, property-based testing. Security Scanning: OWASP Top 10 detection, dependency vulnerability checking.
-
-30:00-50:00 | CI/CD Integration
-GitHub Actions workflow (copy-paste ready), pre-commit hooks, PR check integration. How to handle false positives without slowing down.
-
-50:00-60:00 | Live Q&A + Edge Cases
-Bring your worst AI-generated code. We'll validate it live and discuss framework-specific quirks.
-
-━━━ WHAT YOU GET ━━━
-
-✓ 12 TypeScript Validation Functions
-✓ 47-Page Methodology Guide
-✓ GitHub Actions Workflow
-✓ Accuracy Report (847 functions)
-✓ 15-Step Integration Checklist
+Date: Tuesday, December 16, 2025
+Time: 11:00 AM – 12:30 PM EST (90 minutes)
+Time Zone: America/New_York
 
 ━━━ JOIN THE WEBINAR ━━━
 
 Google Meet joining info:
 
-Video call link: https://meet.google.com/cve-fpwz-gxa
+Video call link: https://meet.google.com/mgm-wojn-kes
 
-Or dial: (US) +1 650-667-2928
-PIN: 451 472 747#
+Or dial: (US) +1 650-597-3592
+PIN: 697 719 929#
 
-More phone numbers: https://tel.meet/cve-fpwz-gxa?pin=3114404973049
+More phone numbers: https://tel.meet/mgm-wojn-kes?pin=2222925596942
 
-Register: https://webinar-landing-page-backup-exur1u1rf-bravetto.vercel.app/webinar`,
-  location: 'https://meet.google.com/cve-fpwz-gxa',
-  startDate: '2025-12-04T19:00:00Z', // December 4, 2025, 2:00 PM EST = 7:00 PM UTC
-  endDate: '2025-12-04T20:00:00Z', // 60 minutes later (3:00 PM EST)
+━━━ WHAT YOU GET ━━━
+
+✓ Instant access to validation toolkit
+✓ Complete methodology guide
+✓ GitHub repository access
+✓ Live Q&A session
+
+Register: ${typeof window !== 'undefined' ? window.location.origin : 'https://webinar-landing-page-backup.vercel.app'}/webinar`,
+  location: 'https://meet.google.com/mgm-wojn-kes',
+  startDate: '2025-12-16T16:00:00Z', // December 16, 2025, 11:00 AM EST = 4:00 PM UTC
+  endDate: '2025-12-16T17:30:00Z', // 12:30 PM EST = 5:30 PM UTC (90 minutes)
   timeZone: 'America/New_York'
 }
 
@@ -101,7 +92,7 @@ PRODID:-//Bravetto//AI Code Validation Webinar//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:webinar-ai-code-validation-2025-12-04@bravetto.com
+UID:webinar-ai-reality-check-2025-12-16@bravetto.com
 DTSTAMP:${dtstamp}
 DTSTART:${startDateFormatted}
 DTEND:${endDateFormatted}
@@ -139,7 +130,7 @@ export function AddToCalendar({ variant = 'button', className = '' }: AddToCalen
   const handleICalDownload = () => {
     const link = document.createElement('a')
     link.href = urls.icalUrl
-    link.download = 'ai-code-validation-webinar.ics'
+    link.download = '6-week-webinar-series-ai-reality-check.ics'
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import sgMail from '@sendgrid/mail'
 import { randomUUID } from 'crypto'
+import { getSendGridCredentials } from '@/lib/abekeys-reader'
 
 // Email template functions (YAGNI: inline for simplicity)
 function getBaseUrl(): string {
@@ -18,7 +19,8 @@ function getUrls() {
 }
 
 function createEmailTemplate(firstName: string, urls: ReturnType<typeof getUrls>) {
-  const teamName = process.env.SENDGRID_FROM_NAME || 'Bravetto Team'
+  const sendGridCreds = getSendGridCredentials()
+  const teamName = sendGridCreds.fromName
   return {
     subject: 'Your Validation Toolkit is Ready (Instant Access)',
     html: `
@@ -46,8 +48,14 @@ function createEmailTemplate(firstName: string, urls: ReturnType<typeof getUrls>
       </div>
       <div style="margin: 20px 0;">
         <h3 style="color: #486581; font-size: 18px; margin-bottom: 8px;">→ Webinar Details</h3>
-        <p style="margin: 8px 0; color: #334e68;"><strong>Date:</strong> Thursday, December 4, 2025<br><strong>Time:</strong> 2:00 PM EST<br><strong>Duration:</strong> 60 minutes</p>
-        <p style="margin: 12px 0 0 0; color: #334e68;">We'll send you the webinar link and calendar invite 24 hours before the event.</p>
+        <p style="margin: 8px 0; color: #334e68;"><strong>Title:</strong> 6 Week Webinar Series | Ai Reality Check<br><strong>Date:</strong> Tuesday, December 16, 2025<br><strong>Time:</strong> 11:00 AM – 12:30 PM EST<br><strong>Duration:</strong> 90 minutes</p>
+        <p style="margin: 12px 0 8px 0; color: #334e68;"><strong>Join the Webinar:</strong></p>
+        <p style="margin: 8px 0; color: #334e68;">
+          <strong>Video call link:</strong> <a href="https://meet.google.com/mgm-wojn-kes" style="color: #486581; text-decoration: underline;">https://meet.google.com/mgm-wojn-kes</a><br>
+          <strong>Or dial:</strong> (US) +1 650-597-3592<br>
+          <strong>PIN:</strong> 697 719 929#
+        </p>
+        <p style="margin: 12px 0 0 0; color: #334e68;">Calendar invite with Google Meet link has been sent to your email.</p>
       </div>
     </div>
     <div style="border-top: 1px solid #d9e2ec; padding-top: 20px; margin-top: 30px;">
@@ -64,19 +72,20 @@ function createEmailTemplate(firstName: string, urls: ReturnType<typeof getUrls>
     <p style="margin-top: 25px; color: #334e68;">Best regards,<br><strong style="color: #102a43;">${teamName}</strong></p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #9fb3c8; font-size: 12px;">
-    <p>You're receiving this because you registered for the AI Code Validation Webinar.</p>
+    <p>You're receiving this because you registered for the 6 Week Webinar Series | Ai Reality Check.</p>
     <p><a href="${urls.landingPage}" style="color: #486581;">View Landing Page</a> | <a href="#" style="color: #486581;">Unsubscribe</a></p>
   </div>
 </body>
 </html>
     `.trim(),
-    text: `Welcome, ${firstName}!\n\nYou're registered for the webinar, and your Validation Toolkit is ready right now—no waiting required.\n\nYOUR INSTANT ACCESS DELIVERABLES:\n\n→ Complete Validation Toolkit\n5 validation scripts, configuration files, and documentation. MIT licensed, production-ready.\nAccess: ${urls.githubRepo}\n\n→ Methodology Report\nComplete 3-Step Validation Pipeline documentation. Test results, real-world examples, CI/CD integration guide.\nAccess: ${urls.methodologyReport}\n\n→ Webinar Details\nDate: Thursday, December 4, 2025\nTime: 2:00 PM EST\nDuration: 60 minutes\n\nWe'll send you the webinar link and calendar invite 24 hours before the event.\n\nWHAT'S NEXT?\n1. Clone the repository and explore the validation scripts\n2. Read the methodology report to understand the approach\n3. Join the webinar to see it in action and ask questions\n\nWhy immediate access? We want you to experience the validation system before the webinar. Use it, test it, come prepared with questions. Zero risk, maximum value.\n\nBest regards,\n${teamName}`.trim()
+    text: `Welcome, ${firstName}!\n\nYou're registered for the webinar, and your Validation Toolkit is ready right now—no waiting required.\n\nYOUR INSTANT ACCESS DELIVERABLES:\n\n→ Complete Validation Toolkit\n5 validation scripts, configuration files, and documentation. MIT licensed, production-ready.\nAccess: ${urls.githubRepo}\n\n→ Methodology Report\nComplete 3-Step Validation Pipeline documentation. Test results, real-world examples, CI/CD integration guide.\nAccess: ${urls.methodologyReport}\n\n→ Webinar Details\nTitle: 6 Week Webinar Series | Ai Reality Check\nDate: Tuesday, December 16, 2025\nTime: 11:00 AM – 12:30 PM EST\nDuration: 90 minutes\n\nJoin the Webinar:\nVideo call link: https://meet.google.com/mgm-wojn-kes\nOr dial: (US) +1 650-597-3592\nPIN: 697 719 929#\n\nCalendar invite with Google Meet link has been sent to your email.\n\nWHAT'S NEXT?\n1. Clone the repository and explore the validation scripts\n2. Read the methodology report to understand the approach\n3. Join the webinar to see it in action and ask questions\n\nWhy immediate access? We want you to experience the validation system before the webinar. Use it, test it, come prepared with questions. Zero risk, maximum value.\n\nBest regards,\n${teamName}`.trim()
   }
 }
 
-// Initialize SendGrid
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+// Initialize SendGrid from AbëKEYS or environment variables
+const sendGridCreds = getSendGridCredentials()
+if (sendGridCreds.apiKey) {
+  sgMail.setApiKey(sendGridCreds.apiKey)
 }
 
 export async function POST(request: NextRequest) {
@@ -114,7 +123,9 @@ export async function POST(request: NextRequest) {
     let emailSent = false
     let emailError: string | null = null
     
-    if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
+    const sendGridCreds = getSendGridCredentials()
+    
+    if (sendGridCreds.apiKey && sendGridCreds.fromEmail) {
       try {
         const urls = getUrls()
         const { subject, html, text } = createEmailTemplate(firstName, urls)
@@ -122,8 +133,8 @@ export async function POST(request: NextRequest) {
         await sgMail.send({
           to: email,
           from: {
-            email: process.env.SENDGRID_FROM_EMAIL,
-            name: process.env.SENDGRID_FROM_NAME || 'Bravetto Team'
+            email: sendGridCreds.fromEmail,
+            name: sendGridCreds.fromName
           },
           subject,
           html,
@@ -141,10 +152,11 @@ export async function POST(request: NextRequest) {
         // Don't fail the registration if email fails
       }
     } else {
-      emailError = 'SendGrid not configured (missing SENDGRID_API_KEY or SENDGRID_FROM_EMAIL)'
+      emailError = 'SendGrid not configured (missing API key or from email in AbëKEYS vault or environment variables)'
       console.warn('SendGrid not configured:', {
-        hasApiKey: !!process.env.SENDGRID_API_KEY,
-        hasFromEmail: !!process.env.SENDGRID_FROM_EMAIL
+        hasApiKey: !!sendGridCreds.apiKey,
+        hasFromEmail: !!sendGridCreds.fromEmail,
+        abekeysPath: `${require('os').homedir()}/.abekeys/credentials/sendgrid.json`
       })
     }
 
